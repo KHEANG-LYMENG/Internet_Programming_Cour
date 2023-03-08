@@ -9,7 +9,7 @@
               <div id="screen_bottom">
                 <!-- v-text is a directive that is used to replace the content of HTML tag with private data -->
                 <!-- It will update the content automatically when data is changed. It is called data reactive -->
-                <span v-text="inputNumber" id="operand1">0</span>
+                <span v-text="inputNumber" id="operand1"></span>
                 <span id="operator"></span>
                 <span id="operand2"></span>
               </div>
@@ -47,7 +47,7 @@
             <button @click=" showNumber(9)" type="button" class="btn btn-light">9</button>
           </td>
           <td>
-            <button @click="procesOutput('divide')" type="button" class="btn btn-secondary">÷</button>
+            <button @click="processOutput('divide')" type="button" class="btn btn-secondary">÷</button>
           </td>
           <td>
             <button type="button" class="btn btn-light">+/-</button>
@@ -64,10 +64,10 @@
             <button v-on:click="showNumber(6)" type="button" class="btn btn-light">6</button>
           </td>
           <td>
-            <button @click="procesOutput('multiply')" type="button" class="btn btn-secondary">x</button>
+            <button @click="processOutput('multiply')" type="button" class="btn btn-secondary">x</button>
           </td>
           <td>
-            <button @click="procesOutput('subtract')" type="button" class="btn btn-secondary">-</button>
+            <button @click="processOutput('subtract')" type="button" class="btn btn-secondary">-</button>
           </td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
             <button v-on:click="showNumber(3)" type="button" class="btn btn-light">3</button>
           </td>
           <td rowspan="2">
-            <button @click="procesOutput('add')" type="button" class="btn btn-secondary long-btn">+</button>
+            <button @click="processOutput('add')" type="button" class="btn btn-secondary long-btn">+</button>
           </td>
           <td rowspan="2">
             <button  @click="updateOutput" type="button" class="btn btn-primary long-btn">=</button>
@@ -95,7 +95,7 @@
         </tr>
         <tr>
           <td>
-            <button @click="clearField()" type="button" class="btn btn-danger">C</button>
+            <button @click="clear()" type="button" class="btn btn-danger">C</button>
           </td>
           <td>
             <button @click="showNumber(0)" type="button" class="btn btn-light">0</button>
@@ -122,45 +122,46 @@ export default {
       // This is the private data section which can be used inside this component
       inputNumber: '',
       previousValue:null,
-      operatorFired: false,
+      operator: false,
     };
   },
   methods: {
     showNumber(number) {
-      if(this.operatorFired){
+      if(this.operator){
         this.inputNumber='';
-        this.operatorFired = false;
+        this.operator = false;
       }
       // Assign number when user click to the inputNumber data
       // To access private data from methods, use (this.)
       this.inputNumber =`${this.inputNumber}${number}`;
     },
-    clearField(){
+
+    clear(){
       this.inputNumber="";
     },
-    procesOutput(string){
+
+    processOutput(string){
       if(string=='add'){
         this.operation = (a, b)=>{
-        return parseFloat(a) + parseFloat(b);
-        }
-      }else if(string=='divide'){
-        this.operation = (a, b)=>{
-        return parseFloat(a) / parseFloat(b);
+          return parseFloat(a) + parseFloat(b);
         }
       }else if(string=='subtract'){
         this.operation = (a, b)=>{
-        return parseFloat(a) - parseFloat(b);
+          return parseFloat(a) - parseFloat(b);
+        }
+      }else if(string=='multiply'){
+        this.operation = (a, b)=>{
+          return parseFloat(a) * parseFloat(b);
+        }
+      }else if(string=='divide'){
+        this.operation = (a, b)=>{
+          return parseFloat(a) / parseFloat(b);
         }
       }
-    else if(string=='multiply'){
-      this.operation = (a, b)=>{
-        return parseFloat(a) * parseFloat(b);
-      }
-    }
       this.previousValue =this.inputNumber;
-      this.operatorFired=true;
-
+      this.operator=true;
     },
+    
     updateOutput(){
     this. inputNumber= `${this.operation(this.previousValue, this.inputNumber)}`;
     this.previousValue=null;
